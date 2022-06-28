@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:home_widget/home_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,11 +59,39 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+      floatingActionButton: const FloatingActionButton(
+        onPressed: _sendAndUpdate,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
     );
   }
 }
+
+Future<void> _sendData() async {
+    DateTime now = DateTime.now();
+    try {
+      await Future.wait([
+        HomeWidget.saveWidgetData<String>('text', now.toString()),
+      ]);
+    } on PlatformException catch (exception) {
+      debugPrint('Error Sending Data. $exception');
+    }
+  }
+
+Future<void> _updateWidget() async {
+    try {
+      await HomeWidget.updateWidget(
+          name: 'HomeWidgetExampleProvider',
+          androidName: 'HomeWidgetExampleProvider',
+          iOSName: 'HomeWidgetExampleProvider',
+          qualifiedAndroidName: 'com.example.home_widget_sample.HomeWidgetExampleProvider');
+    } on PlatformException catch (exception) {
+      debugPrint('Error Updating Widget. $exception');
+    }
+  }
+
+Future<void> _sendAndUpdate() async {
+    await _sendData();
+    await _updateWidget();
+  }
