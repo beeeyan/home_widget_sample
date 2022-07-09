@@ -1,4 +1,4 @@
-package com.example.home_widget_sample
+package work.sendfun.home_widget_sample
 
 import io.flutter.embedding.android.FlutterActivity
 

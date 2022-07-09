@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.home_widget_sample">
+    package="work.sendfun.home_widget_sample">
    <application
         android:label="home_widget_sample"
         android:name="${applicationName}"

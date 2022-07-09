@@ -1,4 +1,4 @@
-package com.example.home_widget_sample
+package work.sendfun.home_widget_sample
 
 import es.antonborri.home_widget.HomeWidgetProvider
 import android.appwidget.AppWidgetManager

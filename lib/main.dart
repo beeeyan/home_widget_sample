@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:home_widget_sample/config/logger.dart';
+
+const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
 
 void main() {
+  HomeWidget.setAppGroupId(appGroupID);
   runApp(const MyApp());
 }
 
@@ -70,28 +74,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Future<void> _sendData() async {
     DateTime now = DateTime.now();
+    logger.i(now);
     try {
       await Future.wait([
         HomeWidget.saveWidgetData<String>('text', now.toString()),
       ]);
     } on PlatformException catch (exception) {
-      debugPrint('Error Sending Data. $exception');
+      logger.e('Error Sending Data. $exception');
     }
   }
 
 Future<void> _updateWidget() async {
     try {
+      logger.i('update');
       await HomeWidget.updateWidget(
           name: 'HomeWidgetExampleProvider',
           androidName: 'HomeWidgetExampleProvider',
-          iOSName: 'HomeWidgetExampleProvider',
-          qualifiedAndroidName: 'com.example.home_widget_sample.HomeWidgetExampleProvider');
+          iOSName: 'HomeWidgetExample',
+          qualifiedAndroidName: 'work.sendfun.home_widget_sample.HomeWidgetExampleProvider');
     } on PlatformException catch (exception) {
-      debugPrint('Error Updating Widget. $exception');
+      logger.e('Error Updating Widget. $exception');
     }
   }
 
 Future<void> _sendAndUpdate() async {
+    logger.i('send and update');
     await _sendData();
     await _updateWidget();
   }
