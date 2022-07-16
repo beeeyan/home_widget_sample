@@ -9,42 +9,94 @@ import WidgetKit
 import SwiftUI
 import Intents
 
-struct Provider: IntentTimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationIntent())
+private let appGroupID = "group.work.sendfun.homeWidget.HomeWidgetExample";
+
+struct Provider: TimelineProvider {
+    func placeholder(in context: Context) -> ExampleEntry {
+        ExampleEntry(date: Date(), text: "Placeholder Title")
     }
 
-    func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), configuration: configuration)
+    // モック的な値（初期値）を入れる。
+    func getSnapshot(in context: Context, completion: @escaping (ExampleEntry) -> ()) {
+        // 共有されるものがあるなら、そこから取得する。
+        let data = UserDefaults.init(suiteName:appGroupID)
+        let text = data?.string(forKey: "text") ?? "no data"
+        let entry = ExampleEntry(date: Date(), text: text)
         completion(entry)
     }
 
-    func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
 
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
-            entries.append(entry)
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        getSnapshot(in: context) { (entry) in
+            // 配列に含めてTimelineにする
+            // policy: .atEnd タイムライン終了後新しいタイムラインを要求するポリシー
+            let timeline = Timeline(entries: [entry], policy: .atEnd)
+            completion(timeline)
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
     }
+
+    // func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    //     // AppGroupsからデータを取得する
+    //     let userDefaults = UserDefaults.init(suiteName:appGroupID)
+    //     let text = userDefaults?.string(forKey: "text") ?? ""
+    //     let entry = ExampleEntry(date: Date(), text: text)
+    //     // 配列に含めてTimelineにする
+    //     // policy: .atEnd タイムライン終了後新しいタイムラインを要求するポリシー
+    //     let timeline = Timeline(entries: [entry], policy: .atEnd)
+    //     completion(timeline)
+    // }
+
+    // func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    //     getSnapshot(in: context) { (entry) in
+    //         // 配列に含めてTimelineにする
+    //         // policy: .atEnd タイムライン終了後新しいタイムラインを要求するポリシー
+    //         let timeline = Timeline(entries: [entry], policy: .atEnd)
+    //         completion(timeline)
+    //     }
+    // }
+
+
+    // struct Provider: IntentTimelineProvider {
+    //     func placeholder(in context: Context) -> SimpleEntry {
+    //         SimpleEntry(date: Date(), configuration: ConfigurationIntent())
+    //     }
+
+    //     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+    //         let entry = SimpleEntry(date: Date(), configuration: configuration)
+    //         completion(entry)
+    //     }
+
+    //     func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    //         var entries: [SimpleEntry] = []
+
+    //         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
+    //         let currentDate = Date()
+    //         for hourOffset in 0 ..< 5 {
+    //             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
+    //             let entry = SimpleEntry(date: entryDate, configuration: configuration)
+    //             entries.append(entry)
+    //         }
+
+    //         let timeline = Timeline(entries: entries, policy: .atEnd)
+    //         completion(timeline)
+    //     }
 }
 
-struct SimpleEntry: TimelineEntry {
+// struct SimpleEntry: TimelineEntry {
+//     let date: Date
+//     let configuration: ConfigurationIntent
+// }
+
+struct ExampleEntry: TimelineEntry {
     let date: Date
-    let configuration: ConfigurationIntent
+    let text: String
 }
 
 struct HomeWidgetExampleEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.date, style: .time)
+        Text(entry.text)
     }
 }
 
@@ -53,7 +105,8 @@ struct HomeWidgetExample: Widget {
     let kind: String = "HomeWidgetExample"
 
     var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+            // let entry2 = ExampleEntry(date: Date(), text: "変更")
             HomeWidgetExampleEntryView(entry: entry)
         }
         .configurationDisplayName("My Widget")
@@ -63,7 +116,7 @@ struct HomeWidgetExample: Widget {
 
 struct HomeWidgetExample_Previews: PreviewProvider {
     static var previews: some View {
-        HomeWidgetExampleEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent()))
+        HomeWidgetExampleEntryView(entry: ExampleEntry(date: Date(), text: "プレビュー"))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

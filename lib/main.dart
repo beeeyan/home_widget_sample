@@ -37,12 +37,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future<void> _sendData() async {
+    HomeWidget.setAppGroupId(appGroupID);
     DateTime now = DateTime.now();
+    logger.i("send");
     logger.i(now);
     try {
       await Future.wait([
@@ -86,7 +82,7 @@ Future<void> _sendData() async {
 
 Future<void> _updateWidget() async {
     try {
-      logger.i('update');
+      logger.i("update");
       await HomeWidget.updateWidget(
           name: 'HomeWidgetExampleProvider',
           androidName: 'HomeWidgetExampleProvider',
@@ -98,7 +94,6 @@ Future<void> _updateWidget() async {
   }
 
 Future<void> _sendAndUpdate() async {
-    logger.i('send and update');
     await _sendData();
     await _updateWidget();
   }
