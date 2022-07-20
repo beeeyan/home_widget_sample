@@ -17,7 +17,9 @@ class HomeWidgetExampleProvider : HomeWidgetProvider() {
         appWidgetIds.forEach { widgetId ->
             val views = RemoteViews(context.packageName, R.layout.example_layout)
             .apply {
-                setTextViewText(R.id.widget_text, widgetData.getString("text", null)
+                setTextViewText(R.id.widget_updated_at, widgetData.getString("updatedAt", null)
+                ?: "No Text Set")
+                setTextViewText(R.id.widget_input_data, widgetData.getString("inputData", null)
                 ?: "No Text Set")
             }
             appWidgetManager.updateAppWidget(widgetId, views)

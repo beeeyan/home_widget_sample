@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:home_widget_sample/config/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
 
@@ -21,8 +20,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     Future(() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final inputData = prefs.getString('inputData');
+      final inputData = await HomeWidget.getWidgetData<String>('inputData');
       inputTextController.text = inputData ?? '';
     });
   }
@@ -39,9 +37,12 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const ElevatedButton(
-                onPressed: _sendAndUpdate,
-                child: Text('時間を更新'),
+              ElevatedButton(
+                onPressed: () async {
+                  _saveDateTime();
+                  _updateWidget();
+                },
+                child: const Text('時間を更新'),
               ),
               Container(
                 margin: const EdgeInsets.all(10),
@@ -57,19 +58,8 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    final SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    await prefs.setString(
-                        'inputData', inputTextController.text);
-                    const methodChannel =
-                        MethodChannel('work.sendfun.home_widget_sample/sample');
-                    try {
-                      final bool result = await methodChannel
-                          .invokeMethod('setUserDefaultsForAppGroup');
-                      logger.i('SET setUserDefaultsForAppGroup: $result');
-                    } on PlatformException catch (e) {
-                      logger.e('ERROR setUserDefaultsData: ${e.message}');
-                    }
+                    _saveInputData(inputTextController.text);
+                    _saveDateTime();
                     _updateWidget();
                   }
                 },
@@ -83,17 +73,27 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Future<void> _sendData() async {
-  HomeWidget.setAppGroupId(appGroupID);
+Future<void> _saveDateTime() async {
+  // HomeWidget.setAppGroupId(appGroupID);
   DateTime now = DateTime.now();
-  logger.i("send");
   logger.i(now);
   try {
     await Future.wait([
       HomeWidget.saveWidgetData<String>('updatedAt', now.toString()),
     ]);
   } on PlatformException catch (exception) {
-    logger.e('Error Sending Data. $exception');
+    logger.e('Error Saving Data. $exception');
+  }
+}
+
+Future<void> _saveInputData(String inputData) async {
+  // HomeWidget.setAppGroupId(appGroupID);
+  try {
+    await Future.wait([
+      HomeWidget.saveWidgetData<String>('inputData', inputData),
+    ]);
+  } on PlatformException catch (exception) {
+    logger.e('Error Saving Data. $exception');
   }
 }
 
@@ -109,9 +109,4 @@ Future<void> _updateWidget() async {
   } on PlatformException catch (exception) {
     logger.e('Error Updating Widget. $exception');
   }
-}
-
-Future<void> _sendAndUpdate() async {
-  await _sendData();
-  await _updateWidget();
 }

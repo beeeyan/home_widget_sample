@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:home_widget_sample/home.dart';
 
+const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // AppGroupsの設定を行う
+  HomeWidget.setAppGroupId(appGroupID);
   runApp(const MyApp());
 }
 
