@@ -13,15 +13,18 @@ private let appGroupID = "group.work.sendfun.homeWidget.HomeWidgetExample";
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> ExampleEntry {
-        ExampleEntry(date: Date(), text: "Placeholder Title")
+        ExampleEntry(date: Date(), updatedAt: "Placeholder UpdateAt", inputData: "Placeholder Input Data")
     }
 
     // モック的な値（初期値）を入れる。
     func getSnapshot(in context: Context, completion: @escaping (ExampleEntry) -> ()) {
         // 共有されるものがあるなら、そこから取得する。
         let data = UserDefaults.init(suiteName:appGroupID)
-        let text = data?.string(forKey: "text") ?? "no data"
-        let entry = ExampleEntry(date: Date(), text: text)
+        let updatedAt = data?.string(forKey: "updatedAt") ?? "no data"
+        // 1: FlutterのSharedPreferencesから取得
+        // let standard = data.standard
+        let inputData = data?.string(forKey: "inputData") ?? "no data"
+        let entry = ExampleEntry(date: Date(), updatedAt: updatedAt, inputData: inputData)
         completion(entry)
     }
 
@@ -89,14 +92,17 @@ struct Provider: TimelineProvider {
 
 struct ExampleEntry: TimelineEntry {
     let date: Date
-    let text: String
+    let updatedAt: String
+    let inputData: String
 }
 
 struct HomeWidgetExampleEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.text)
+        Text(entry.updatedAt)
+        Spacer().frame(height: 5)
+        Text(entry.inputData)
     }
 }
 
@@ -106,7 +112,6 @@ struct HomeWidgetExample: Widget {
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            // let entry2 = ExampleEntry(date: Date(), text: "変更")
             HomeWidgetExampleEntryView(entry: entry)
         }
         .configurationDisplayName("My Widget")
@@ -116,7 +121,7 @@ struct HomeWidgetExample: Widget {
 
 struct HomeWidgetExample_Previews: PreviewProvider {
     static var previews: some View {
-        HomeWidgetExampleEntryView(entry: ExampleEntry(date: Date(), text: "プレビュー"))
+        HomeWidgetExampleEntryView(entry: ExampleEntry(date: Date(), updatedAt: "preview updatedAt", inputData: "preview inputData"))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }
