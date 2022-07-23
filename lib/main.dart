@@ -6,7 +6,7 @@ const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // AppGroupsの設定を行う
+  // AppGroupsの設定
   HomeWidget.setAppGroupId(appGroupID);
   runApp(const MyApp());
 }

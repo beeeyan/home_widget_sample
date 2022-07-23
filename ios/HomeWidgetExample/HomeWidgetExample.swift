@@ -100,9 +100,12 @@ struct HomeWidgetExampleEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.updatedAt)
-        Spacer().frame(height: 5)
-        Text(entry.inputData)
+        VStack {
+            Text(entry.inputData).foregroundColor(Color.white)
+            Divider().background(Color.white)
+            Text(entry.updatedAt).foregroundColor(Color.white)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(red: 1/255, green: 0, blue: 102/255, opacity: 1.0))
     }
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:home_widget_sample/config/logger.dart';
+import 'package:home_widget_sample/util/date_time_formatter.dart';
 
 const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
 
@@ -35,15 +36,9 @@ class _HomePageState extends State<HomePage> {
         child: Form(
           key: formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  _saveDateTime();
-                  _updateWidget();
-                },
-                child: const Text('時間を更新'),
-              ),
+              const SizedBox(height: 10,),
               Container(
                 margin: const EdgeInsets.all(10),
                 child: TextFormField(
@@ -55,15 +50,27 @@ class _HomePageState extends State<HomePage> {
                   controller: inputTextController,
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    _saveInputData(inputTextController.text);
-                    _saveDateTime();
-                    _updateWidget();
-                  }
-                },
-                child: const Text('データ保存して更新'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      _saveDateTime();
+                      _updateWidget();
+                    },
+                    child: const Text('時間だけ更新'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        _saveInputData(inputTextController.text);
+                        _saveDateTime();
+                        _updateWidget();
+                      }
+                    },
+                    child: const Text('データ保存して更新'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -74,12 +81,11 @@ class _HomePageState extends State<HomePage> {
 }
 
 Future<void> _saveDateTime() async {
-  // HomeWidget.setAppGroupId(appGroupID);
-  DateTime now = DateTime.now();
-  logger.i(now);
+  final nowStr = DateTimeUtil.getNowStr();
+  logger.i('表示時間 : $nowStr');
   try {
     await Future.wait([
-      HomeWidget.saveWidgetData<String>('updatedAt', now.toString()),
+      HomeWidget.saveWidgetData<String>('updatedAt', nowStr),
     ]);
   } on PlatformException catch (exception) {
     logger.e('Error Saving Data. $exception');
