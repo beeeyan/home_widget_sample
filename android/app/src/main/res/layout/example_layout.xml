@@ -10,14 +10,14 @@
     android:padding="8dp"
     android:id="@+id/widget_container">
     <TextView
-        android:id="@+id/widget_updated_at"
+        android:id="@+id/widget_input_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="36sp"
         android:textStyle="bold"
         tools:text="Text" />
     <TextView
-        android:id="@+id/widget_input_data"
+        android:id="@+id/widget_updated_at"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="36sp"

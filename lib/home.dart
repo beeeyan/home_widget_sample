@@ -4,8 +4,6 @@ import 'package:home_widget/home_widget.dart';
 import 'package:home_widget_sample/config/logger.dart';
 import 'package:home_widget_sample/util/date_time_formatter.dart';
 
-const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -85,6 +83,7 @@ Future<void> _saveDateTime() async {
   logger.i('表示時間 : $nowStr');
   try {
     await Future.wait([
+      // Widgetで扱うデータを保存
       HomeWidget.saveWidgetData<String>('updatedAt', nowStr),
     ]);
   } on PlatformException catch (exception) {
@@ -93,9 +92,9 @@ Future<void> _saveDateTime() async {
 }
 
 Future<void> _saveInputData(String inputData) async {
-  // HomeWidget.setAppGroupId(appGroupID);
   try {
     await Future.wait([
+      // Widgetで扱うデータを保存
       HomeWidget.saveWidgetData<String>('inputData', inputData),
     ]);
   } on PlatformException catch (exception) {
@@ -105,7 +104,11 @@ Future<void> _saveInputData(String inputData) async {
 
 Future<void> _updateWidget() async {
   try {
-    logger.i("update");
+    // androidのWidgetの処理は
+    // 「qualifiedAndroidName」→「androidName」→「name」の順で探す。
+    // iOSのWidgetの処理は
+    // 「iOSName」→「name」の順で探す。
+    // つまり、命名をうまくやれば最小「name」だけでよい
     await HomeWidget.updateWidget(
         name: 'HomeWidgetExampleProvider',
         androidName: 'HomeWidgetExampleProvider',

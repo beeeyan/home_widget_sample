@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:home_widget_sample/home.dart';
 
+// 動作確認する場合、設定のappGroupIDに変更する
 const appGroupID = 'group.work.sendfun.homeWidget.HomeWidgetExample';
 
 void main() {

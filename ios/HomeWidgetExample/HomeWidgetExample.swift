@@ -2,13 +2,14 @@
 //  HomeWidgetExample.swift
 //  HomeWidgetExample
 //
-//  Created by 阿部俊輔 on 2022/06/29.
+//  Created by beeeyan on 2022/06/29.
 //
 
 import WidgetKit
 import SwiftUI
 import Intents
 
+// 動作確認する場合、設定のappGroupIDに変更する
 private let appGroupID = "group.work.sendfun.homeWidget.HomeWidgetExample";
 
 struct Provider: TimelineProvider {
@@ -21,8 +22,6 @@ struct Provider: TimelineProvider {
         // 共有されるものがあるなら、そこから取得する。
         let data = UserDefaults.init(suiteName:appGroupID)
         let updatedAt = data?.string(forKey: "updatedAt") ?? "no data"
-        // 1: FlutterのSharedPreferencesから取得
-        // let standard = data.standard
         let inputData = data?.string(forKey: "inputData") ?? "no data"
         let entry = ExampleEntry(date: Date(), updatedAt: updatedAt, inputData: inputData)
         completion(entry)
@@ -37,58 +36,7 @@ struct Provider: TimelineProvider {
             completion(timeline)
         }
     }
-
-    // func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-    //     // AppGroupsからデータを取得する
-    //     let userDefaults = UserDefaults.init(suiteName:appGroupID)
-    //     let text = userDefaults?.string(forKey: "text") ?? ""
-    //     let entry = ExampleEntry(date: Date(), text: text)
-    //     // 配列に含めてTimelineにする
-    //     // policy: .atEnd タイムライン終了後新しいタイムラインを要求するポリシー
-    //     let timeline = Timeline(entries: [entry], policy: .atEnd)
-    //     completion(timeline)
-    // }
-
-    // func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-    //     getSnapshot(in: context) { (entry) in
-    //         // 配列に含めてTimelineにする
-    //         // policy: .atEnd タイムライン終了後新しいタイムラインを要求するポリシー
-    //         let timeline = Timeline(entries: [entry], policy: .atEnd)
-    //         completion(timeline)
-    //     }
-    // }
-
-
-    // struct Provider: IntentTimelineProvider {
-    //     func placeholder(in context: Context) -> SimpleEntry {
-    //         SimpleEntry(date: Date(), configuration: ConfigurationIntent())
-    //     }
-
-    //     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-    //         let entry = SimpleEntry(date: Date(), configuration: configuration)
-    //         completion(entry)
-    //     }
-
-    //     func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-    //         var entries: [SimpleEntry] = []
-
-    //         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-    //         let currentDate = Date()
-    //         for hourOffset in 0 ..< 5 {
-    //             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-    //             let entry = SimpleEntry(date: entryDate, configuration: configuration)
-    //             entries.append(entry)
-    //         }
-
-    //         let timeline = Timeline(entries: entries, policy: .atEnd)
-    //         completion(timeline)
-    //     }
 }
-
-// struct SimpleEntry: TimelineEntry {
-//     let date: Date
-//     let configuration: ConfigurationIntent
-// }
 
 struct ExampleEntry: TimelineEntry {
     let date: Date
@@ -103,7 +51,9 @@ struct HomeWidgetExampleEntryView : View {
         VStack {
             Text(entry.inputData).foregroundColor(Color.white)
             Divider().background(Color.white)
-            Text(entry.updatedAt).foregroundColor(Color.white)
+            Text(entry.updatedAt)
+            .foregroundColor(Color.white)
+        // 背景の設定
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(red: 1/255, green: 0, blue: 102/255, opacity: 1.0))
     }
