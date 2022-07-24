@@ -16,7 +16,6 @@ struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> ExampleEntry {
         ExampleEntry(date: Date(), updatedAt: "Placeholder UpdateAt", inputData: "Placeholder Input Data")
     }
-
     // モック的な値（初期値）を入れる。
     func getSnapshot(in context: Context, completion: @escaping (ExampleEntry) -> ()) {
         // 共有されるものがあるなら、そこから取得する。
@@ -26,7 +25,6 @@ struct Provider: TimelineProvider {
         let entry = ExampleEntry(date: Date(), updatedAt: updatedAt, inputData: inputData)
         completion(entry)
     }
-
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         getSnapshot(in: context) { (entry) in
