@@ -147,9 +147,9 @@ widgetDataから`updatedAt`と`inputData`を取ってきている。
 プロジェクト名を決めてfinishすると  
 iOSフォルダの中に新しいフォルダが作成される。(サンプルプログラムあり)  
   
-![vscode1](https://gyazo.com/076fc14955049a69d6b6e622c95d6767/raw)
+<img src="https://gyazo.com/076fc14955049a69d6b6e622c95d6767/raw" width="30%">
   
-![vscode2](https://gyazo.com/951607a881410c4cdd5dd81d54ab5eae/raw)
+<img src="https://gyazo.com/951607a881410c4cdd5dd81d54ab5eae/raw" width="30%">
   
 [参考](https://qiita.com/koooootake/items/0a5b871c0cee884bd5e7/raw)  
   
@@ -157,7 +157,7 @@ iOSフォルダの中に新しいフォルダが作成される。(サンプル�
 AppGroups の設定は Apple Developer Program でも設定する必要がある。  
 Apple Developer Programに入っていないと動作確認できない。  
   
-<img src="https://gyazo.com/2a6178500014512e3a204121b9b97a14" width="30%">
+<img src="https://gyazo.com/2a6178500014512e3a204121b9b97a14/raw" width="30%">
   
 ![appGroup](https://gyazo.com/21e461a3619ab4899a0e4c438a91142b/raw)
   
