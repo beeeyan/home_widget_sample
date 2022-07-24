@@ -10,7 +10,7 @@ FlutterのHome Widgetでどこまでできるか
 本サンプル用にも記載する。  
   
 ※ サンプルコードの動作結果  
-![動作](https://gyazo.com/5e33aa0f9f972c7f3acfde8dae1c665d/raw)
+<img src="https://gyazo.com/5e33aa0f9f972c7f3acfde8dae1c665d/raw" width="50%" alt="動作">
   
 ## Androidの設定
 ### ① android/app/src/main/res/layout配下にHome Widgetのデザインをxmlで記載
